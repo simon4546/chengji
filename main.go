@@ -15,10 +15,17 @@ type User struct {
 }
 
 type Score struct {
+	ID       uint `gorm:"primaryKey"`
+	UserID   uint
+	Subject  string
+	PeriodID uint
+	Score    int
+}
+
+type Period struct {
 	ID      uint `gorm:"primaryKey"`
-	UserID  uint
 	Subject string
-	Score   int
+	Name    string
 }
 
 var db *gorm.DB
@@ -30,7 +37,7 @@ func init() {
 		panic("failed to connect database")
 	}
 
-	db.AutoMigrate(&User{}, &Score{})
+	db.AutoMigrate(&User{}, &Score{}, &Period{})
 }
 
 func login(c echo.Context) error {
@@ -65,18 +72,34 @@ func changePassword(c echo.Context) error {
 func getScores(c echo.Context) error {
 	username := c.QueryParam("username")
 	subject := c.QueryParam("subject")
-
+	periodid := c.QueryParam("periodid")
 	var user User
 	if err := db.Where("username = ?", username).First(&user).Error; err != nil {
 		return c.JSON(http.StatusNotFound, map[string]string{"message": "User not found"})
 	}
 
 	var scores []Score
-	if err := db.Where("user_id = ? AND subject = ?", user.ID, subject).Find(&scores).Error; err != nil {
+	if err := db.Where("user_id = ? AND subject = ? AND periodid=?", user.ID, subject, periodid).Find(&scores).Error; err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Error fetching scores"})
 	}
 
 	return c.JSON(http.StatusOK, scores)
+}
+func getPeriods(c echo.Context) error {
+	username := c.QueryParam("username")
+	subject := c.QueryParam("subject")
+
+	var user User
+	if err := db.Where("username = ?", username).First(&user).Error; err != nil {
+		return c.JSON(http.StatusNotFound, map[string]string{"message": "User not found"})
+	}
+
+	var periods []Period
+	if err := db.Where("subject = ?", subject).Find(&periods).Error; err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Error fetching scores"})
+	}
+
+	return c.JSON(http.StatusOK, periods)
 }
 
 func main() {
@@ -85,6 +108,7 @@ func main() {
 	e.POST("/login", login)
 	e.POST("/change-password", changePassword)
 	e.GET("/get-scores", getScores)
+	e.GET("/get-periods", getPeriods)
 
 	e.Logger.Fatal(e.Start(":8080"))
 }
