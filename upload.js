@@ -10,6 +10,7 @@ const knex = require('knex')({
     },
 });
 const app = express();
+app.use(express.json());
 const port = 3001;
 app.use(session({ secret: 'keyboard cat', cookie: { maxAge: 60000000 } }))
 const storage = multer.diskStorage({
