@@ -28,17 +28,25 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.post('/login', (req, res) => {
     let result = knex('users').where({
-        username: req.body.user,
-        passwd: req.body.passwd,
+        username: req.body.studentId,
+        passwd: req.body.password,
     }).select('id');
     if (result.length < 1) {
         res.status(500).end()
     } else {
-        req.session.user=result['id']
+        req.session.user = result['id']
         res.send({ message: `OK` });
     }
 });
-
+app.get('/', (req, res) => {
+    if (!req.session.user) {
+        return res.redirect('/login')
+    }
+    res.sendFile(path.join(__dirname, '/views/index.html'));
+});
+app.get('/login', (req, res) => {
+    res.sendFile(path.join(__dirname, '/views/login.html'));
+});
 app.get('/excel', (req, res) => { res.sendFile(path.join(__dirname, '/views/upload.html')); });
 
 app.post('/upload', upload.single('excelFile'), (req, res) => {
