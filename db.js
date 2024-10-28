@@ -19,6 +19,7 @@ knex.schema.hasTable('scores').then(function (exists) {
             t.increments('id').primary();
             t.string('name', 100);
             t.string('no', 100);
+            t.string('title', 100);
             t.string('subject', 100);
             t.string('level', 100);
             t.string('score', 100);

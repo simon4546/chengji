@@ -17,7 +17,7 @@ function handle(path) {
                 title = excelContent[index][0]
                 const match = title.match(regex);
                 if (match) {
-                    obj.titleList = titleList;
+                    obj.title = titleList;
                     obj.name = match[1];
                     obj.no = match[2];
                 }

@@ -3,7 +3,7 @@ const session = require('express-session')
 const multer = require('multer');
 const xlsx = require('./handle_english');
 const path = require('path');
-const knex = require('./db');
+const knex = require('./db').db;
 const app = express();
 app.use(express.json());
 const port = 3001;
