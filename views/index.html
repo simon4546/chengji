@@ -11,7 +11,7 @@
         .custom-div {
             text-align: center;
             border: 1px solid #efefef;
-            color:white;
+            color: white;
             padding: 1px;
             height: 50px;
             margin: 1px;
@@ -22,8 +22,9 @@
         }
 
         .head-item {
+            border-radius: 0.4rem;
             background: #8299ed;
-            margin-right: 0.3rem;
+            margin: 0.3rem 0.6rem;
             color: white;
         }
     </style>
@@ -44,22 +45,34 @@
         <main>
             <ol class="list-group list-group-numbered">
                 <li v-for="item in items" :key="item.id" style="font-size: 0.75rem;">
-                    <p>考试: {{ item.title }}</p>
-                    <div class="row">
-                        <div class="col-6"><p>姓名: {{ item.name }}</p></div>
-                        <div class="col-6"><p>学号: {{ item.no }}</p></div>
-                    </div>
-                    <div class="row">
-                        <div class="col-6"><p>评定: {{ item.level }}</p></div>
-                        <div class="col-6"><p>分数: {{ item.score }}</p></div>
-                    </div>
-                    <div class="row">
-                        <div class="col-12"><p>单项得分：</p></div>
-                    </div>
-                    <div class="row" style="margin-left: 0.5rem;">
-                        <div class="col-2 custom-div" v-for="(item1, index) in item.items" :key="index">
-                            <div style="background:rgb(58 171 23 / 58%)">{{ item1 }}</div>
-                            <div style="color: dimgrey;">{{item.values[index]}}</div>
+                    <div style="margin-left: 0.7rem;">
+                        <p>考试: {{ item.title }}</p>
+                        <div class="row">
+                            <div class="col-6">
+                                <p>姓名: {{ item.name }}</p>
+                            </div>
+                            <div class="col-6">
+                                <p>学号: {{ item.no }}</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-6">
+                                <p>评定: {{ item.level }}</p>
+                            </div>
+                            <div class="col-6">
+                                <p>分数: {{ item.score }}</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <p>单项得分：</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-2 custom-div" v-for="(item1, index) in item.items" :key="index">
+                                <div style="background:rgb(58 171 23 / 58%)">{{ item1 }}</div>
+                                <div style="color: dimgrey;">{{item.values[index]}}</div>
+                            </div>
                         </div>
                     </div>
                 </li>
