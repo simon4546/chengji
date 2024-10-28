@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>动态数据列表</title>
+    <title>成功查询</title>
 </head>
 
 <body>
@@ -12,9 +12,9 @@
         <header>
             <nav>
                 <ul>
-                    <li @click="fetchData('math')">数学</li>
-                    <li @click="fetchData('chinese')">语文</li>
-                    <li @click="fetchData('english')">英语</li>
+                    <li @click="fetchData('Math')">数学</li>
+                    <li @click="fetchData('Chinese')">语文</li>
+                    <li @click="fetchData('English')">英语</li>
                 </ul>
             </nav>
         </header>
@@ -36,8 +36,8 @@
             methods: {
                 fetchData(subject) {
                     $.ajax({
-                        url: `https://example.com/api/${subject}`, // 替换为实际 API 地址
-                        method: 'GET',
+                        url: `/score?subject=${subject}`, // 替换为实际 API 地址
+                        method: 'POST',
                         success: (data) => {
                             this.items = data; // 假设返回的数据格式为 [{ id: 1, name: '内容1' }, ...]
                         },

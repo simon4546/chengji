@@ -23,16 +23,17 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.post('/login', (req, res) => {
-    let result = knex('users').where({
-        username: req.body.studentId,
-        passwd: req.body.password,
-    }).select('id');
-    if (result.length < 1) {
-        res.status(500).end()
-    } else {
-        req.session.user = result['id']
-        res.send({ message: `OK` });
-    }
+    knex('users').where({
+        no: req.body.studentId,
+        password: req.body.password,
+    }).first('id', 'no').then(function (result) {
+        if (!result) {
+            res.status(500).end()
+        } else {
+            req.session.user = result['no']
+            res.send({ success: true, message: `OK` });
+        }
+    });
 });
 app.get('/', (req, res) => {
     if (!req.session.user) {
@@ -42,6 +43,17 @@ app.get('/', (req, res) => {
 });
 app.get('/login', (req, res) => {
     res.sendFile(path.join(__dirname, '/views/login.html'));
+});
+app.post('/score', (req, res) => {
+    let user = req.session.user
+    let subject = req.query.subject
+    knex('scores').where({ subject: subject, no: user }).then(function (result) {
+        if (!result) {
+            res.status(500).end()
+        } else {
+            res.json(result)
+        }
+    });
 });
 app.get('/excel', (req, res) => { res.sendFile(path.join(__dirname, '/views/upload.html')); });
 
@@ -57,13 +69,13 @@ app.post('/upload', upload.single('excelFile'), (req, res) => {
     } else {
         for (let index = 0; index < workbook.length; index++) {
             const element = workbook[index];
-            knex('users').insert({ name: element.name, no: element.no }).onConflict().ignore().then(function(id){
+            knex('users').insert({ name: element.name, no: element.no }).onConflict().ignore().then(function (id) {
                 console.log(id)
             });
-            element.subject=subjects
-            element.items=JSON.stringify(element.items);
-            element.values=JSON.stringify(element.values);
-            knex('scores').insert(element).then(function(id){
+            element.subject = subjects
+            element.items = JSON.stringify(element.items);
+            element.values = JSON.stringify(element.values);
+            knex('scores').insert(element).then(function (id) {
                 console.log(id)
             });
         }
