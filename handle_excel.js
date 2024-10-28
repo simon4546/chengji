@@ -27,7 +27,7 @@ function handle(path) {
                 resultList.push(obj)
             }
         }
-
+        fs.rm(path,function(){});
         return resultList
     } catch (ex) {
         return -1
