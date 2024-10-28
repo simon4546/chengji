@@ -1,13 +1,11 @@
 const nodeXlsx = require('node-xlsx');
 const fs = require('fs');
-// 读取xlsx
 const workbook = nodeXlsx.parse('./1.xlsx');
 let excelContent = workbook[0].data;
 
 let resultList = [];
 
 let titleList = excelContent[1][0];
-// let contentList = excelContent.slice(1);
 
 for (let index = 0; index < excelContent.length; index = index + 8) {
     const element = excelContent[index];
@@ -19,10 +17,13 @@ for (let index = 0; index < excelContent.length; index = index + 8) {
         obj.titleList=titleList;
         obj.name = match[1]; 
         obj.no = match[2];
+
         obj.items = excelContent[index + 5]
         obj.items.shift()
         obj.values = excelContent[index + 6]
         obj.values.shift()
+        obj.level = obj.values.at(-1);
+        obj.score = obj.values.at(-2);
         resultList.push(obj)
     }
 }
