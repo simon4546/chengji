@@ -6,7 +6,7 @@ let excelContent = workbook[0].data;
 
 let resultList = [];
 
-let titleList = excelContent[0];
+let titleList = excelContent[1][0];
 // let contentList = excelContent.slice(1);
 
 for (let index = 0; index < excelContent.length; index = index + 8) {
@@ -16,6 +16,7 @@ for (let index = 0; index < excelContent.length; index = index + 8) {
     const regex = /(.*?)\((\d+)\)_成绩单/;
     const match = title.match(regex);
     if (match) {
+        obj.titleList=titleList;
         obj.name = match[1]; 
         obj.no = match[2];
         obj.items = excelContent[index + 5]
