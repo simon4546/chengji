@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>上传 Excel 文件</title>
+</head>
+
+<body>
+    <h1>上传 Excel 文件</h1>
+    <form action="/upload" method="post" enctype="multipart/form-data">
+        <input type="file" name="excelFile" accept=".xlsx, .xls" required />
+        <button type="submit">上传</button>
+    </form>
+</body>
+
+</html>
