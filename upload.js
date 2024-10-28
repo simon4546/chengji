@@ -3,12 +3,7 @@ const session = require('express-session')
 const multer = require('multer');
 const xlsx = require('./handle_english');
 const path = require('path');
-const knex = require('knex')({
-    client: 'sqlite3', // or 'better-sqlite3'
-    connection: {
-        filename: './mydb.sqlite',
-    },
-});
+const knex = require('./db');
 const app = express();
 app.use(express.json());
 const port = 3001;
@@ -60,6 +55,12 @@ app.post('/upload', upload.single('excelFile'), (req, res) => {
     if (workbook == -1) {
         res.status(500).end()
     } else {
+        for (let index = 0; index < workbook.length; index++) {
+            const element = workbook[index];
+            knex('users').insert({ name: element.name, no: element.no });
+            element.subject=subjects
+            knex('scores').insert(element);
+        }
         res.send({ message: `${subjects}文件上传成功！` });
     }
 });
