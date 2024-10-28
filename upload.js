@@ -20,12 +20,20 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.get('/excel', (req, res) => { res.render('upload.html'); });
+app.get('/excel', (req, res) => { res.sendFile(path.join(__dirname, '/views/upload.html')); });
 
 app.post('/upload', upload.single('excelFile'), (req, res) => {
+    const subjects = req.body.subjects;
+    if(!subjects){
+        return res.status(500).end()
+    }
     const filePath = req.file.path;
     const workbook = xlsx.Handle(filePath);
-    res.send({ message: '文件上传成功！' });
+    if (workbook == -1) {
+        res.status(500).end()
+    } else {
+        res.send({ message: `${subjects}文件上传成功！` });
+    }
 });
 
 // 启动服务器
