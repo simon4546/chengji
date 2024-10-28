@@ -4,24 +4,66 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>成功查询</title>
+    <title>成绩查询</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <style>
+        .custom-div {
+            text-align: center;
+            border: 1px solid #efefef;
+            color:white;
+            padding: 1px;
+            height: 50px;
+            margin: 1px;
+        }
+
+        .head {
+            margin: 0.4rem 0;
+        }
+
+        .head-item {
+            background: #8299ed;
+            margin-right: 0.3rem;
+            color: white;
+        }
+    </style>
 </head>
 
 <body>
     <div id="app">
         <header>
-            <nav>
-                <ul>
-                    <li @click="fetchData('Math')">数学</li>
-                    <li @click="fetchData('Chinese')">语文</li>
-                    <li @click="fetchData('English')">英语</li>
-                </ul>
-            </nav>
+            <div class="row head">
+                <div class="col-3 head-item"><a class="nav-link active" aria-current="page" href="#"
+                        @click="fetchData('Math')">数学</a></div>
+                <div class="col-3 head-item"><a class="nav-link active" aria-current="page" href="#"
+                        @click="fetchData('Chinese')">语文</a></div>
+                <div class="col-3 head-item"><a class="nav-link active" aria-current="page" href="#"
+                        @click="fetchData('English')">英语</a></div>
+            </div>
         </header>
         <main>
-            <ul>
-                <li v-for="item in items" :key="item.id">{{ item.name }}</li>
-            </ul>
+            <ol class="list-group list-group-numbered">
+                <li v-for="item in items" :key="item.id" style="font-size: 0.75rem;">
+                    <p>考试: {{ item.title }}</p>
+                    <div class="row">
+                        <div class="col-6"><p>姓名: {{ item.name }}</p></div>
+                        <div class="col-6"><p>学号: {{ item.no }}</p></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6"><p>评定: {{ item.level }}</p></div>
+                        <div class="col-6"><p>分数: {{ item.score }}</p></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12"><p>单项得分：</p></div>
+                    </div>
+                    <div class="row" style="margin-left: 0.5rem;">
+                        <div class="col-2 custom-div" v-for="(item1, index) in item.items" :key="index">
+                            <div style="background:rgb(58 171 23 / 58%)">{{ item1 }}</div>
+                            <div style="color: dimgrey;">{{item.values[index]}}</div>
+                        </div>
+                    </div>
+                </li>
+            </ol>
         </main>
     </div>
 
@@ -36,10 +78,14 @@
             methods: {
                 fetchData(subject) {
                     $.ajax({
-                        url: `/score?subject=${subject}`, // 替换为实际 API 地址
+                        url: `/score?subject=${subject}`,
                         method: 'POST',
                         success: (data) => {
-                            this.items = data; // 假设返回的数据格式为 [{ id: 1, name: '内容1' }, ...]
+                            data.forEach(element => {
+                                element.items = JSON.parse(element.items)
+                                element.values = JSON.parse(element.values)
+                            });
+                            this.items = data;
                         },
                         error: (error) => {
                             console.error('获取数据失败:', error);
