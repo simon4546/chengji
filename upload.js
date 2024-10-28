@@ -46,6 +46,9 @@ app.get('/login', (req, res) => {
 });
 app.post('/score', (req, res) => {
     let user = req.session.user
+    if(!user){
+        return res.redirect('/login')
+    }
     let subject = req.query.subject
     knex('scores').where({ subject: subject, no: user }).then(function (result) {
         if (!result) {
@@ -56,6 +59,9 @@ app.post('/score', (req, res) => {
     });
 });
 app.get('/excel', (req, res) => { res.sendFile(path.join(__dirname, '/views/upload.html')); });
+app.get('/exit', (req, res) => { 
+    req.session.user = null;
+});
 
 app.post('/upload', upload.single('excelFile'), (req, res) => {
     const subjects = req.body.subjects;
