@@ -3,6 +3,7 @@ const knex = require('knex')({
     connection: {
         filename: './mydb.sqlite',
     },
+    useNullAsDefault: true,
 });
 knex.schema.hasTable('users').then(function (exists) {
     if (!exists) {
@@ -28,4 +29,7 @@ knex.schema.hasTable('scores').then(function (exists) {
         });
     }
 });
+// console.log("asdfasdf")
+// console.log(knex('users').insert({ name: 'element.name', no: 'element.no' }).toSQL().toNative())
+// knex('users').insert({ name: 'element.name', no: 'element.no' })
 exports.db=knex

@@ -11,7 +11,7 @@ function handle(path) {
         const regex = /(.*?)\((\d+)\)_成绩单/;
         for (let index = 0; index < excelContent.length;) {
             const element = excelContent[index];
-            let obj = {items:[],values:[]};
+            let obj = { items: [], values: [] };
             let title;
             if (element.length == 1 && element[0].indexOf("成绩单") != -1) {
                 title = excelContent[index][0]
@@ -21,33 +21,36 @@ function handle(path) {
                     obj.name = match[1];
                     obj.no = match[2];
                 }
-            }
-            for (let idx = index + 1; idx < excelContent.length;) {
-                const row = excelContent[idx];
-                if (row.length > 0 && row[0] == '题号') {
-                    _tem=row.slice(1)
-                    obj.items = obj.items.concat(_tem)
-                    let row1 = excelContent[idx + 1];
-                    _tem=row1.slice(1)
-                    obj.values = obj.values.concat(_tem)
-                    idx++;
-                }
-                if (row.length == 0 && obj.values.length > 0) {
+                for (let idx = index + 1; idx < excelContent.length;) {
+                    const row = excelContent[idx];
+                    if (row.length > 0 && row[0] == '题号') {
+                        _tem = row.slice(1)
+                        obj.items = obj.items.concat(_tem)
+                        let row1 = excelContent[idx + 1];
+                        _tem = row1.slice(1)
+                        obj.values = obj.values.concat(_tem)
+                        idx = idx + 2
+                    } else {
+                        idx = idx + 1;
+                    }
                     index = idx;
-                    break;
+                    //如果当前的学生数据结束
+                    if (row.length == 0 && obj.values.length > 0) {
+                        break;
+                    }
                 }
-                idx++;
+                obj.level = obj.values.at(-1);
+                obj.score = obj.values.at(-2);
+                resultList.push(obj)
+            } else {
+                index++
             }
-            obj.level = obj.values.at(-1);
-            obj.score = obj.values.at(-2);
-            resultList.push(obj)
-            index++
         }
-        fs.rm(path, function () { });
+        // fs.rm(path, function () { });
         return resultList
     } catch (ex) {
         return -1
     }
 }
-// handle('./1.xlsx')
+handle('./2.xlsx')
 exports.Handle = handle

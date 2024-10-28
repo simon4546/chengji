@@ -57,9 +57,15 @@ app.post('/upload', upload.single('excelFile'), (req, res) => {
     } else {
         for (let index = 0; index < workbook.length; index++) {
             const element = workbook[index];
-            knex('users').insert({ name: element.name, no: element.no });
+            knex('users').insert({ name: element.name, no: element.no }).onConflict().ignore().then(function(id){
+                console.log(id)
+            });
             element.subject=subjects
-            knex('scores').insert(element);
+            element.items=JSON.stringify(element.items);
+            element.values=JSON.stringify(element.values);
+            knex('scores').insert(element).then(function(id){
+                console.log(id)
+            });
         }
         res.send({ message: `${subjects}文件上传成功！` });
     }
