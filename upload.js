@@ -39,7 +39,7 @@ app.post('/change-password', (req, res) => {
     let oldPassword = req.body.oldPassword;
     let newPassword = req.body.newPassword;
     knex('users').where({ no: req.session.user, password: oldPassword }).update({ password: newPassword }).then(function (result) {
-        if (!result) {
+        if (result != 1) {
             res.status(500).end()
         } else {
             res.send({ success: true, message: `OK` });

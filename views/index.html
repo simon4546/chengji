@@ -40,8 +40,17 @@
                 <div class="col-3 head-item"><a class="nav-link active" aria-current="page" href="#"
                         @click="fetchData('Math')">数学</a></div>
             </div>
+            <div class="row">
+                <div class="col">
+                </div>
+                <div class="col">
+                </div>
+                <div class="col">
+                    <a class="nav-link active" aria-current="page" href="/changepassword" style="font-size: 0.8rem; color: #529538;">修改密码</a>
+                </div>
         </header>
         <main>
+
             <ol class="list-group list-group-numbered">
                 <li v-for="item in items" :key="item.id" style="font-size: 0.75rem;">
                     <div style="margin-left: 0.7rem;">
