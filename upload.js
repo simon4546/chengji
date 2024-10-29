@@ -42,7 +42,6 @@ app.post('/change-password', (req, res) => {
         if (!result) {
             res.status(500).end()
         } else {
-            req.session.user = result['no']
             res.send({ success: true, message: `OK` });
         }
     });;
