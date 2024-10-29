@@ -75,6 +75,7 @@ app.post('/score', (req, res) => {
 app.get('/excel', (req, res) => { res.sendFile(path.join(__dirname, '/views/upload.html')); });
 app.get('/exit', (req, res) => {
     req.session.user = null;
+    return res.redirect('/login')
 });
 
 app.post('/upload', upload.single('excelFile'), (req, res) => {
