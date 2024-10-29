@@ -35,6 +35,18 @@ app.post('/login', (req, res) => {
         }
     });
 });
+app.post('/change-password', (req, res) => {
+    let oldPassword = req.body.oldPassword;
+    let newPassword = req.body.newPassword;
+    knex('users').where({ no: req.session.user, password: oldPassword }).update({ password: newPassword }).then(function (result) {
+        if (!result) {
+            res.status(500).end()
+        } else {
+            req.session.user = result['no']
+            res.send({ success: true, message: `OK` });
+        }
+    });;
+});
 app.get('/', (req, res) => {
     if (!req.session.user) {
         return res.redirect('/login')
@@ -44,9 +56,12 @@ app.get('/', (req, res) => {
 app.get('/login', (req, res) => {
     res.sendFile(path.join(__dirname, '/views/login.html'));
 });
+app.get('/changepassword', (req, res) => {
+    res.sendFile(path.join(__dirname, '/views/changepassword.html'));
+});
 app.post('/score', (req, res) => {
     let user = req.session.user
-    if(!user){
+    if (!user) {
         return res.redirect('/login')
     }
     let subject = req.query.subject
@@ -59,7 +74,7 @@ app.post('/score', (req, res) => {
     });
 });
 app.get('/excel', (req, res) => { res.sendFile(path.join(__dirname, '/views/upload.html')); });
-app.get('/exit', (req, res) => { 
+app.get('/exit', (req, res) => {
     req.session.user = null;
 });
 
